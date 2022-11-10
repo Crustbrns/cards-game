@@ -1,0 +1,312 @@
+body {
+    background-color: #282b30;
+    user-select: none;
+    background-image: url('../images/background.png');
+    background-repeat: repeat;
+    background-size: cover;
+    overflow: hidden; 
+}
+
+.card {
+    width: 146px;
+    height: 196px;
+    position: absolute;
+    display: inline-block;
+    animation-duration: .2s;
+    border-radius: 5px;
+    left: -1.9375rem;
+    top: -2.75rem;
+    transition: .55s ease;
+    background-color: white;
+    border: 0;
+}
+
+.playable:hover {
+    transform: scale(1.1) !important;
+}
+
+.card.red {
+    background-image: url('../images/redsuit.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    -webkit-box-shadow: 0px 0px 33px -7px rgba(0, 0, 0, 0.31);
+    -moz-box-shadow: 0px 0px 33px -7px rgba(0, 0, 0, 0.31);
+    box-shadow: 0px 0px 33px -7px rgba(0, 0, 0, 0.31);
+}
+
+.card.black {
+    background-image: url('../images/blacksuit.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    -webkit-box-shadow: 0px 0px 33px -7px rgba(0, 0, 0, 0.31);
+    -moz-box-shadow: 0px 0px 33px -7px rgba(0, 0, 0, 0.31);
+    box-shadow: 0px 0px 33px -7px rgba(0, 0, 0, 0.31);
+}
+
+.card.red.diamond {
+    background-image: url('../images/cardsuit_diamond.png');
+}
+
+.card.red.heart {
+    background-image: url('../images/cardsuit_heart.png');
+}
+
+.card.black.spade {
+    background-image: url('../images/cardsuit_spade.png');
+}
+
+.card.black.club {
+    background-image: url('../images/cardsuit_club.png');
+}
+
+.card:before,
+.card:after {
+    position: absolute;
+    font-size: 1.4rem;
+    text-align: center;
+    line-height: 0.7rem;
+    font-weight: 600;
+    font-family: 'e-Ukraine-R';
+    white-space: pre-line;
+    width: 0.55rem;
+    letter-spacing: -0.1rem;
+}
+
+.card:before {
+    top: 0.9rem;
+    left: 0.8rem;
+}
+
+.card:after {
+    bottom: 0.9rem;
+    right: 0.8rem;
+    -webkit-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    transform: rotate(180deg);
+}
+
+.card.red:after {
+    color: #d6494c;
+}
+
+.card.black:after {
+    color: #2c4d72;
+}
+
+.card.red:before {
+    color: #d6494c;
+}
+
+.card.black:before {
+    color: #2c4d72;
+}
+
+.card:before,
+.card:after {
+    content: attr(title);
+}
+
+#container {
+    position: fixed;
+    top: calc(52.5%);
+    left: 48%;
+    -webkit-transform: translate3d(-50%, -50%, 0);
+    -moz-transform: translate3d(-50%, -50%, 0);
+    -o-transform: translate3d(-50%, -50%, 0);
+    -ms-transform: translate3d(-50%, -50%, 0);
+    transform: translate3d(-50%, -50%, 0);
+    margin: auto;
+}
+
+#gui {
+    position: fixed;
+    top: calc(52.5%);
+    left: 48%;
+}
+
+#btn-volume {
+    position: absolute;
+    top: -30rem;
+    left: -55rem;
+    transform: scale(1.5);
+    fill: white;
+    transition: .2s ease;
+}
+
+#btn-volume:hover {
+    cursor: pointer;
+    transform: scale(1);
+    transition: .2s ease;
+}
+
+#btn-restart {
+    position: absolute;
+    top: -29.9rem;
+    left: -51.5rem;
+    transform: scale(1);
+    color: white;
+    width: 6.1rem;
+    font-family: 'e-Ukraine-R';
+    cursor: pointer;
+    transition: .2s ease;
+}
+
+#btn-restart:hover {
+    transform: scale(0.9);
+    transition: .2s ease;
+}
+
+#btn-info {
+    user-select: none;
+    pointer-events: none;
+    position: absolute;
+    top: 25rem;
+    left: -55.5rem;
+    width: 38rem;
+    color: white;
+    opacity: 0;
+    font-family: 'e-Ukraine-L';
+    transition: .8s ease;
+}
+
+#btn-info.visible {
+    opacity: 0.3;
+    transition: .8s ease;
+}
+
+.dragging {
+    cursor: none !important;
+    transition: 0s !important;
+    z-index: 1000 !important;
+}
+
+#btn-action {
+    user-select: none;
+    position: absolute;
+    top: 24.2rem;
+    left: 17.5rem;
+    width: 5rem;
+    text-align: center;
+    font-family: 'e-Ukraine-L';
+}
+
+.button {
+    padding: 8px 15px;
+    border-radius: 10px;
+    background-color: #ea4c89;
+    color: white;
+    transition: .2s ease;
+    pointer-events: none;
+    opacity: 0;
+}
+
+#bot-action {
+    width: 8rem;
+    height: 4rem;
+    background-color: white;
+    border-radius: 8px 8px 0 8px;
+    position: absolute;
+    top: -29rem;
+    left: -16.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'e-Ukraine-L';
+    opacity: 0;
+    transition: .2s ease;
+}
+
+#bot-action.visible {
+    opacity: 1;
+    transition: .2s ease;
+}
+
+#game {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 96vh;
+}
+
+.no-shadow {
+    box-shadow: none !important;
+}
+
+.bordered {
+    border: 4px solid #ff3034 !important;
+    transition: .075s ease !important;
+    box-sizing: border-box;
+    border-radius: 9px;
+}
+
+#winner {
+    font-family: 'e-Ukraine-B';
+    color: white;
+    font-size: 6vw;
+    animation: winneranim;
+    animation-duration: 1s;
+    animation-timing-function: ease;
+}
+
+@keyframes winneranim {
+    from{
+        transform: scale(0);
+    }
+    to{
+        transform: scale(1);
+    }
+}
+
+#bot-action>svg {
+    position: absolute;
+    fill: white;
+    left: 99.5%;
+    bottom: -5%;
+}
+
+.button:hover {
+    cursor: pointer;
+    transition: .2s ease;
+}
+
+.button.visible {
+    pointer-events: all;
+    transition: .2s ease;
+    opacity: 1;
+}
+
+@keyframes shuffleleft {
+    0% {
+        transform: translate(0, -40%);
+    }
+
+    50% {
+        transform: translate(-35%, -40%);
+    }
+
+    100% {
+        transform: translate(0, -40%);
+    }
+}
+
+@keyframes shuffleright {
+    0% {
+        transform: translate(0, -40%);
+    }
+
+    50% {
+        transform: translate(35%, -40%);
+    }
+
+    100% {
+        transform: translate(0, -40%);
+    }
+}
+
+.back-side {
+    background-image: url('../images/cardsuit.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+}
