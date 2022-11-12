@@ -29,9 +29,20 @@ function hideCard(card: Card): void {
     cardItem.title = '';
 }
 
+function sortCardsByForce() {
+    deck.player.cards
+        .sort(function (a, b) { return a.force - b.force })
+}
+
+function sortCardsBySuit() {
+    deck.player.cards
+        .sort(function (a, b) { return b.suit.type - a.suit.type })
+}
+
+
 function sortCards() {
-    deck.player.cards.sort(function (a, b) { return b.suit.type - a.suit.type });
-    console.log(deck.player);
+    deck.player.cards
+        .sort(function (a, b) { return b.suit.type - a.suit.type || a.force - b.force })
 }
 
 function start() {
