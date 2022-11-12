@@ -25,6 +25,18 @@ function hideCard(card) {
     cardItem.classList.add('back-side');
     cardItem.title = '';
 }
+function sortCardsByForce() {
+    deck.player.cards
+        .sort(function (a, b) { return a.force - b.force; });
+}
+function sortCardsBySuit() {
+    deck.player.cards
+        .sort(function (a, b) { return b.suit.type - a.suit.type; });
+}
+function sortCards() {
+    deck.player.cards
+        .sort(function (a, b) { return b.suit.type - a.suit.type || a.force - b.force; });
+}
 function start() {
     deck = new Deck();
     document.addEventListener('contextmenu', function (event) { return event.preventDefault(); });
@@ -264,6 +276,9 @@ function InitializeCards() {
 }
 function ArrangeCards(Cards, isPlayer) {
     var cardNum = 0;
+    if (isPlayer) {
+        sortCards();
+    }
     for (var _i = 0, Cards_1 = Cards; _i < Cards_1.length; _i++) {
         var Card = Cards_1[_i];
         var cardItem = document.getElementById("card".concat(Card.id));
