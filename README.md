@@ -1,1 +1,1 @@
-Play at https://crustbrns.github.io/Kiricards/
+Play at https://crustbrns.github.io/cards-game/
