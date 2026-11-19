@@ -39,8 +39,9 @@ const PortraitLayout = {
 };
 const CardWidth = 146;
 const CardHeight = 196;
-const TouchHandStep = 42;
-const TouchHandScale = 1.25;
+const TouchHandScale = 1.4;
+const TouchFanRadius = 900;
+const TouchFanAngle = 4;
 const isTouch = window.matchMedia('(pointer: coarse)').matches;
 let layout = window.innerWidth < window.innerHeight ? PortraitLayout : LandscapeLayout;
 let sceneScale = 1;
@@ -59,12 +60,10 @@ function GetHandScale() {
 function GetPlayerHandY() {
     return layout.playerHandY - (isTouch ? (TouchHandScale - 1) * 50 : 0);
 }
-function GetTouchHandSpread(count) {
-    let step = TouchHandStep / sceneScale;
-    if (count > 1) {
-        step = Math.min(step, (layout.sceneWidth * 0.95 - CardWidth * TouchHandScale) / (count - 1));
-    }
-    return step / CardWidth * 100 / 20;
+function GetTouchFanPosition(index, count) {
+    let angle = (index - (count - 1) / 2) * TouchFanAngle;
+    let radians = angle * Math.PI / 180;
+    return new Position(TouchFanRadius * Math.sin(radians) / CardWidth * 100, GetPlayerHandY() + TouchFanRadius * (1 - Math.cos(radians)) / CardHeight * 100, angle);
 }
 function RelayoutCards() {
     for (let i = 0; i < deck.cards.length; i++) {
