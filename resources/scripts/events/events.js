@@ -186,9 +186,9 @@ function Resize() {
             continue;
         element.style.scale = `${sceneScale}`;
         element.style.left = layout.isPortrait ? `${window.innerWidth / 2 - 42 * sceneScale}px` : '';
-        element.style.top = layout.isPortrait ? `${window.innerHeight / 2 - 54 * sceneScale}px` : '';
+        element.style.top = layout.isPortrait ? `${(layout.sceneHeight / 2 - 54) * sceneScale}px` : '';
     }
-    let uiScale = isTouch ? Math.max(1, 0.8 / sceneScale) : 1;
+    let uiScale = isTouch ? Math.max(1, 0.7 / sceneScale) : 1;
     document.getElementById('gui').style.setProperty('--ui', `${uiScale}`);
     if (layout !== previousLayout) {
         RelayoutCards();

@@ -327,8 +327,17 @@ body.portrait #btn-restart {
 }
 
 body.portrait #bot-action {
-    top: -19.75rem;
-    left: -11.75rem;
+    top: -18.2rem;
+    left: auto;
+    right: -25.4rem;
+    width: calc(4rem * var(--ui, 1));
+    height: calc(2rem * var(--ui, 1));
+    font-size: 0.55em;
+    border-radius: 8px;
+}
+
+body.portrait #bot-action>svg {
+    display: none;
 }
 
 body.portrait #btn-info {

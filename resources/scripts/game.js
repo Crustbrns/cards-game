@@ -145,7 +145,7 @@ function start() {
                         }
                         hideCard(deck.cards[0]);
                         document.getElementById(`card${deck.cards[0].id}`).style.transition = `0.35s`;
-                        document.getElementById(`card${deck.cards[0].id}`).style.transform = `translate(${layout.deckX}%, ${layout.deckY - 4}%) rotate(0deg)`;
+                        document.getElementById(`card${deck.cards[0].id}`).style.transform = `translate(${layout.deckX}%, ${layout.deckY - 4}%) rotate(0deg)${GetTopRowScale()}`;
                     }, 1200);
                     timeoutRestart = setTimeout(() => {
                         StrictSmoothRestart();
@@ -266,7 +266,7 @@ function ArrangeCards(Cards, isPlayer) {
         else {
             Card.position = new Position((-10 * (Cards.length - 1) + (cardNum * 20)) * (multiplier >= 1 ? 1 : multiplier / 0.8) + (isPlayer ? 0 : layout.botHandX), ((isPlayer ? layout.playerHandY : layout.botHandY) - (isPlayer ? 1 : -1) * (6 * (cardNum < (Cards.length / 2) ? (Cards.length / 2 - ((Cards.length - cardNum) / 2)) : (((Cards.length - cardNum) - 1) / 2)))), (-5 * (Cards.length - 1) + (cardNum++ * 10)) * (multiplier >= 1 ? 1 : multiplier * 1.5));
         }
-        cardItem.style.transform = `translate(${Card.position.x}%, ${Card.position.y}%) rotate(${isPlayer ? Card.position.angle : -Card.position.angle}deg)${isPlayer ? GetHandScale() : ''}`;
+        cardItem.style.transform = `translate(${Card.position.x}%, ${Card.position.y}%) rotate(${isPlayer ? Card.position.angle : -Card.position.angle}deg)${isPlayer ? GetHandScale() : GetTopRowScale()}`;
         cardItem.style.zIndex = isPlayer ? cardNum.toString() : ((cardNum * -1) + 40).toString();
     }
 }
