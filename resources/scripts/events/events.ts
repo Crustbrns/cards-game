@@ -1,3 +1,7 @@
+// True if point (px, py) lies inside the box with top-left corner (x, y) and size w×h; edges count as inside
+function isPointInBox(x: number, y: number, w: number, h: number, px: number, py: number): boolean {
+    return px >= x && px <= x + w && py >= y && py <= y + h;
+}
 
 window.onresize = (event) => {
     Resize();
@@ -74,7 +78,7 @@ window.onmouseup = (event) => {
             }
             else if (!deck.isFirstPlayerMoving) {
                 let card = deck.heap.activeCards.filter(x => x.bundle === undefined).filter(x => deck.heap.activeCards.filter(y => y.bundle === x.id).length === 0)
-                    .find(card => Intersects.boxPoint(card.position!.x! * 100 / 70 - 90, card.position!.y! * 140 / 45 - 20, 170, 200, x, y));
+                    .find(card => isPointInBox(card.position!.x! * 100 / 70 - 90, card.position!.y! * 140 / 45 - 20, 170, 200, x, y));
 
                 // console.log(card);
 
@@ -150,7 +154,7 @@ window.onmousemove = (event) => {
 
         if (!deck.isFirstPlayerMoving) {
             for (const card of deck.heap.activeCards.filter(x => x.bundle === undefined)) {
-                let intersected = Intersects.boxPoint(card.position!.x! * 100 / 70 - 90, card.position!.y! * 140 / 45 - 20, 170, 200, x, y);
+                let intersected = isPointInBox(card.position!.x! * 100 / 70 - 90, card.position!.y! * 140 / 45 - 20, 170, 200, x, y);
                 // console.log('card x', card.position!.x! * 100 / 70 - 70, 'card y', card.position!.y! * 140 / 45, `x:${x}, y${y}`, intersected);
                 if (intersected && deck.heap.activeCards.filter(x => x.bundle === card.id).length === 0) {
                     let cardItem = document.getElementById(`card${card.id}`)!;

@@ -153,7 +153,7 @@ class Deck {
     Shuffle(): Card {
         for (let i = 0; i < 36; i++) {
             let randcard = Math.floor(Math.random() * 36);
-            let temp = this.cards.at(randcard)!;
+            let temp = this.cards[randcard];
             this.cards[randcard] = this.cards[i];
             this.cards[i] = temp;
         }

@@ -1,3 +1,4 @@
+"use strict";
 var Suit;
 (function (Suit) {
     Suit[Suit["DIAMOND"] = 0] = "DIAMOND";
@@ -5,40 +6,38 @@ var Suit;
     Suit[Suit["CLUB"] = 2] = "CLUB";
     Suit[Suit["SPADE"] = 3] = "SPADE";
 })(Suit || (Suit = {}));
-var SuitName = /** @class */ (function () {
-    function SuitName(type, name) {
+class SuitName {
+    constructor(type, name) {
         this.type = type;
         this.name = name;
     }
-    return SuitName;
-}());
-var Suits = new Map();
+}
+let Suits = new Map();
 Suits.set(Suit.DIAMOND, { type: 0, name: 'diamond' });
 Suits.set(Suit.HEART, { type: 1, name: 'heart' });
 Suits.set(Suit.CLUB, { type: 2, name: 'club' });
 Suits.set(Suit.SPADE, { type: 3, name: 'spade' });
-var Position = /** @class */ (function () {
-    function Position(x, y, angle) {
+class Position {
+    ;
+    constructor(x, y, angle) {
         this.x = x;
         this.y = y;
         this.angle = angle;
     }
-    ;
-    return Position;
-}());
-var Card = /** @class */ (function () {
-    function Card(type, suit, force, id) {
+}
+class Card {
+    constructor(type, suit, force, id) {
         this.suit = new SuitName(type, suit);
         this.force = force;
         this.id = id;
     }
-    Card.prototype.GetSuitType = function () {
+    GetSuitType() {
         if (this.suit.type === 0 || this.suit.type === 1) {
             return 'red';
         }
         return 'black';
-    };
-    Card.prototype.GetSuitForce = function () {
+    }
+    GetSuitForce() {
         if (this.force > 10) {
             if (this.force === 11)
                 return 'J';
@@ -50,18 +49,17 @@ var Card = /** @class */ (function () {
                 return 'A';
         }
         return this.force.toString();
-    };
-    return Card;
-}());
-var Heap = /** @class */ (function () {
-    function Heap() {
+    }
+}
+class Heap {
+    constructor() {
         this.discardIndex = 0;
         this.attackingCards = 0;
         this.activeCards = [];
         this.discardedCards = [];
     }
-    Heap.prototype.TryAddAttackingCard = function (card) {
-        if (this.activeCards.length === 0 || this.activeCards.filter(function (x) { return x.force === card.force; }).length !== 0) {
+    TryAddAttackingCard(card) {
+        if (this.activeCards.length === 0 || this.activeCards.filter(x => x.force === card.force).length !== 0) {
             card.position.angle = -5 + Math.floor(Math.random() * 10);
             this.activeCards.push(card);
             this.attackingCards++;
@@ -69,83 +67,76 @@ var Heap = /** @class */ (function () {
             return true;
         }
         return false;
-    };
-    Heap.prototype.CalcPosition = function () {
+    }
+    CalcPosition() {
         var _a, _b, _c, _d;
-        var isEven = this.attackingCards % 2 === 0;
-        var startPosX;
+        let isEven = this.attackingCards % 2 === 0;
+        let startPosX;
         if (isEven) {
             startPosX = 0 - (Math.floor(this.attackingCards / 2) - 0.5) * 140;
         }
         else {
             startPosX = 0 - Math.floor(this.attackingCards / 2) * 140;
         }
-        var _loop_1 = function (item) {
+        for (const item of this.activeCards.filter(x => x.bundle === undefined)) {
             item.position = new Position(startPosX, -45, ((_a = item.position) === null || _a === void 0 ? void 0 : _a.angle) || 0);
-            var cardBundle = this_1.activeCards.find(function (x) { return x.bundle === item.id; });
+            let cardBundle = this.activeCards.find(x => x.bundle === item.id);
             if (cardBundle != null) {
                 cardBundle.position = new Position(((_b = item === null || item === void 0 ? void 0 : item.position) === null || _b === void 0 ? void 0 : _b.x) + 14, ((_c = item === null || item === void 0 ? void 0 : item.position) === null || _c === void 0 ? void 0 : _c.y) + 9, ((_d = item === null || item === void 0 ? void 0 : item.position) === null || _d === void 0 ? void 0 : _d.angle) + 5);
             }
             startPosX += 140;
-        };
-        var this_1 = this;
-        for (var _i = 0, _e = this.activeCards.filter(function (x) { return x.bundle === undefined; }); _i < _e.length; _i++) {
-            var item = _e[_i];
-            _loop_1(item);
         }
-    };
-    Heap.prototype.Discard = function () {
-    };
-    Heap.prototype.Abandon = function () {
+    }
+    Discard() {
+    }
+    Abandon() {
         return [];
-    };
-    Heap.prototype.ClearTurn = function (isAbandoned) {
+    }
+    ClearTurn(isAbandoned) {
         this.attackingCards = 0;
         this.discardIndex += isAbandoned ? 0 : 1;
-    };
-    return Heap;
-}());
-var Deck = /** @class */ (function () {
-    function Deck() {
+    }
+}
+class Deck {
+    constructor() {
         var _a;
         this.cards = [];
         this.lastCard = 1;
         this.heap = new Heap();
         this.player = new Player();
         this.bot = new Bot();
-        for (var i = 0; i < 4; i++) {
-            var suit = (_a = Suits.get(i)) === null || _a === void 0 ? void 0 : _a.name;
-            for (var j = 0; j < 9; j++) {
+        for (let i = 0; i < 4; i++) {
+            let suit = (_a = Suits.get(i)) === null || _a === void 0 ? void 0 : _a.name;
+            for (let j = 0; j < 9; j++) {
                 this.cards.push(new Card(i, suit, 6 + j, i * 9 + j));
             }
         }
         this.trumps = this.Shuffle().suit;
     }
-    Deck.prototype.Shuffle = function () {
-        for (var i = 0; i < 36; i++) {
-            var randcard = Math.floor(Math.random() * 36);
-            var temp = this.cards.at(randcard);
+    Shuffle() {
+        for (let i = 0; i < 36; i++) {
+            let randcard = Math.floor(Math.random() * 36);
+            let temp = this.cards[randcard];
             this.cards[randcard] = this.cards[i];
             this.cards[i] = temp;
         }
-        for (var i = 0; i < 36; i++) {
+        for (let i = 0; i < 36; i++) {
             this.cards[i].id = i;
         }
         return this.cards[0];
-    };
-    Deck.prototype.InitPlayer = function () {
+    }
+    InitPlayer() {
         // console.log(this.cards);
-        for (var i = 0; i < 6; i++) {
+        for (let i = 0; i < 6; i++) {
             this.player.AddCard(this.cards[1]);
             this.cards.splice(1, 1);
             this.bot.AddCard(this.cards[1]);
             this.cards.splice(1, 1);
         }
-    };
-    Deck.prototype.ProcessFirstMove = function () {
-        var _this = this;
-        var BotCard = this.bot.cards.filter(function (x) { return x.suit.type === _this.trumps.type; }).sort(function (a, b) { return a.force - b.force; });
-        var PlayerCard = this.player.cards.filter(function (x) { return x.suit.type === _this.trumps.type; }).sort(function (a, b) { return a.force - b.force; });
+    }
+    ProcessFirstMove() {
+        let BotCard = this.bot.cards.filter(x => x.suit.type === this.trumps.type).sort(function (a, b) { return a.force - b.force; });
+        let PlayerCard = this.player.cards.filter(x => x.suit.type === this.trumps.type).sort(function (a, b) { return a.force - b.force; });
         // console.log(BotCard, PlayerCard);
         if (BotCard.length === 0 && PlayerCard.length !== 0) {
             this.isFirstPlayerMoving = true;
@@ -167,8 +158,8 @@ var Deck = /** @class */ (function () {
         }
         else
             return null;
-    };
-    Deck.prototype.TryPushPlayersCards = function () {
+    }
+    TryPushPlayersCards() {
         if (this.cards.length > 0) {
             while (this.player.cards.length < 6 && this.cards.length > 0) {
                 if (this.cards.length > 1) {
@@ -191,37 +182,36 @@ var Deck = /** @class */ (function () {
                 }
             }
         }
-    };
-    Deck.prototype.CardsToDeck = function () {
+    }
+    CardsToDeck() {
         while (this.player.cards.length > 0) {
-            var Card_1 = this.player.cards.pop();
-            this.cards.push(Card_1);
+            let Card = this.player.cards.pop();
+            this.cards.push(Card);
         }
         while (this.bot.cards.length > 0) {
-            var Card_2 = this.bot.cards.pop();
-            this.cards.push(Card_2);
+            let Card = this.bot.cards.pop();
+            this.cards.push(Card);
         }
         while (this.heap.activeCards.length > 0) {
-            var Card_3 = this.heap.activeCards.pop();
-            this.cards.push(Card_3);
+            let Card = this.heap.activeCards.pop();
+            this.cards.push(Card);
         }
         while (this.heap.discardedCards.length > 0) {
-            var Card_4 = this.heap.discardedCards.pop();
-            this.cards.push(Card_4);
+            let Card = this.heap.discardedCards.pop();
+            this.cards.push(Card);
         }
         // console.log(this.cards, this.player.cards, this.bot.cards);
-    };
-    Deck.prototype.TurnOver = function () {
+    }
+    TurnOver() {
         // console.log(this.heap.activeCards.length,
         //     this.heap.activeCards.length % 2 == 0,
         //     this.heap.activeCards.filter(x => x.bundle !== undefined),
         //     this.heap.activeCards.filter(x => x.bundle !== undefined).length === this.heap.activeCards.length / 2);
-        var _this = this;
         if (this.heap.activeCards.length !== 0) {
             if (this.heap.activeCards.length % 2 == 0 &&
-                this.heap.activeCards.filter(function (x) { return x.bundle !== undefined; }).length === this.heap.activeCards.length / 2) {
+                this.heap.activeCards.filter(x => x.bundle !== undefined).length === this.heap.activeCards.length / 2) {
                 while (this.heap.activeCards.length > 0) {
-                    var discardedCard = this.heap.activeCards.pop();
+                    let discardedCard = this.heap.activeCards.pop();
                     discardedCard.position = new Position(610 + Math.random() * 100, -130 + Math.random() * 160, -25 + Math.random() * 50);
                     if (Math.random() > 0.5) {
                         discardedCard.hidden = true;
@@ -253,7 +243,7 @@ var Deck = /** @class */ (function () {
             else if (this.heap.attackingCards !== this.heap.activeCards.length / 2
                 && !this.isFirstPlayerMoving) {
                 this.bot.shouldTake = undefined;
-                var additionalCard = TryPushMoreCards();
+                let additionalCard = TryPushMoreCards();
                 if (additionalCard !== null) {
                     while (additionalCard !== null) {
                         if (additionalCard !== null &&
@@ -262,15 +252,11 @@ var Deck = /** @class */ (function () {
                             if (deck.heap.TryAddAttackingCard(additionalCard)) {
                                 showCard(additionalCard);
                                 deck.bot.RemoveCard(additionalCard);
-                                var _loop_2 = function (card) {
-                                    var cardItem = document.getElementById("card".concat(card.id));
-                                    cardItem.style.transform = "translate(".concat(card.position.x, "%, ").concat(card.position.y, "%) rotate(").concat(card.position.angle, "deg)");
-                                    cardItem.addEventListener('mouseenter', function (event) { return ScaleCard(card, cardItem); }, true);
-                                    cardItem.addEventListener('mouseleave', function (event) { return NormalizeCard(card, cardItem); }, true);
-                                };
-                                for (var _i = 0, _a = deck.heap.activeCards; _i < _a.length; _i++) {
-                                    var card = _a[_i];
-                                    _loop_2(card);
+                                for (const card of deck.heap.activeCards) {
+                                    let cardItem = document.getElementById(`card${card.id}`);
+                                    cardItem.style.transform = `translate(${card.position.x}%, ${card.position.y}%) rotate(${card.position.angle}deg)`;
+                                    cardItem.addEventListener('mouseenter', (event) => ScaleCard(card, cardItem), true);
+                                    cardItem.addEventListener('mouseleave', (event) => NormalizeCard(card, cardItem), true);
                                 }
                                 ArrangeCards(deck.bot.cards, false);
                                 toggleActionButtonContext(true, 'Take');
@@ -278,13 +264,13 @@ var Deck = /** @class */ (function () {
                         }
                         additionalCard = TryPushMoreCards();
                     }
-                    setTimeout(function () {
+                    setTimeout(() => {
                         audioPlayer.Play('placed');
-                        while (_this.heap.activeCards.length > 0) {
-                            _this.player.AddCard(_this.heap.activeCards.pop());
+                        while (this.heap.activeCards.length > 0) {
+                            this.player.AddCard(this.heap.activeCards.pop());
                         }
-                        _this.heap.attackingCards = 0;
-                        _this.TryPushPlayersCards();
+                        this.heap.attackingCards = 0;
+                        this.TryPushPlayersCards();
                         toggleActionButton(false);
                         toggleBotsDecision(false);
                         UpdateInfoBox();
@@ -306,63 +292,60 @@ var Deck = /** @class */ (function () {
             }
         }
         return false;
-    };
-    return Deck;
-}());
-var Player = /** @class */ (function () {
-    function Player() {
+    }
+}
+class Player {
+    constructor() {
         this.cards = [];
     }
-    Player.prototype.AddCard = function (card) {
+    AddCard(card) {
         if (!this.cards.includes(card)) {
             this.cards.push(card);
         }
-    };
-    Player.prototype.RemoveCard = function (card) {
+    }
+    RemoveCard(card) {
         if (this.cards.includes(card)) {
             this.cards.splice(this.cards.indexOf(card), 1);
         }
-    };
-    return Player;
-}());
-var Bot = /** @class */ (function () {
-    function Bot() {
+    }
+}
+class Bot {
+    constructor() {
         this.cards = [];
     }
-    Bot.prototype.AddCard = function (card) {
+    AddCard(card) {
         if (!this.cards.includes(card)) {
             this.cards.push(card);
         }
-    };
-    Bot.prototype.RemoveCard = function (card) {
+    }
+    RemoveCard(card) {
         if (this.cards.includes(card)) {
             this.cards.splice(this.cards.indexOf(card), 1);
         }
-    };
-    Bot.prototype.TryBeatCard = function (card, trump) {
-        if (this.cards.filter(function (x) { return x.suit.type === card.suit.type; })
-            .filter(function (x) { return x.force > card.force; }).length !== 0) {
-            return this.cards.filter(function (x) { return x.suit.type === card.suit.type; })
-                .filter(function (x) { return x.force > card.force; })
+    }
+    TryBeatCard(card, trump) {
+        if (this.cards.filter(x => x.suit.type === card.suit.type)
+            .filter(x => x.force > card.force).length !== 0) {
+            return this.cards.filter(x => x.suit.type === card.suit.type)
+                .filter(x => x.force > card.force)
                 .sort(function (a, b) { return a.force - b.force; })[0];
         }
         else if (card.suit.type !== trump.type &&
-            this.cards.filter(function (x) { return x.suit.type === trump.type; }).length !== 0) {
-            return this.cards.filter(function (x) { return x.suit.type === trump.type; })
+            this.cards.filter(x => x.suit.type === trump.type).length !== 0) {
+            return this.cards.filter(x => x.suit.type === trump.type)
                 .sort(function (a, b) { return a.force - b.force; })[0];
         }
         return null;
-    };
-    Bot.prototype.ProcessCardToAttack = function (trump) {
+    }
+    ProcessCardToAttack(trump) {
         if (this.cards.length > 0) {
-            if (this.cards.filter(function (x) { return x.suit.type !== trump.type; }).length > 0) {
-                return this.cards.filter(function (x) { return x.suit.type !== trump.type; })
+            if (this.cards.filter(x => x.suit.type !== trump.type).length > 0) {
+                return this.cards.filter(x => x.suit.type !== trump.type)
                     .sort(function (a, b) { return a.force - b.force; })[0];
             }
             else
                 return this.cards.sort(function (a, b) { return a.force - b.force; })[0];
         }
         return null;
-    };
-    return Bot;
-}());
+    }
+}

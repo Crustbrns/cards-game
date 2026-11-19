@@ -1,26 +1,27 @@
-var deck = new Deck();
-var audioPlayer = new AudioManager();
-var timeoutShuffle;
-var timeoutTrumpCard;
-var timeoutInitCards;
-var timeoutShowCards;
-var timeoutHideCard;
-var timeoutCenterCards;
-var timeoutRestart;
-var timeoutSmoothCenter;
-var timeoutStrictSmooth;
-var timeoutAccurateShuffle;
-var timeoutbotbeat;
-var timeoutBotAttack;
+"use strict";
+let deck = new Deck();
+const audioPlayer = new AudioManager();
+let timeoutShuffle;
+let timeoutTrumpCard;
+let timeoutInitCards;
+let timeoutShowCards;
+let timeoutHideCard;
+let timeoutCenterCards;
+let timeoutRestart;
+let timeoutSmoothCenter;
+let timeoutStrictSmooth;
+let timeoutAccurateShuffle;
+let timeoutbotbeat;
+let timeoutBotAttack;
 function showCard(card) {
-    var cardItem = document.getElementById("card".concat(card.id));
+    let cardItem = document.getElementById(`card${card.id}`);
     cardItem.classList.remove('back-side');
     cardItem.classList.add(card.GetSuitType());
     cardItem.title = card.GetSuitForce();
     cardItem.classList.add(card.suit.name);
 }
 function hideCard(card) {
-    var cardItem = document.getElementById("card".concat(card.id));
+    let cardItem = document.getElementById(`card${card.id}`);
     cardItem.classList.remove('red', 'black', 'diamond', 'spade', 'club', 'heart');
     cardItem.classList.add('back-side');
     cardItem.title = '';
@@ -39,86 +40,83 @@ function sortCards() {
 }
 function start() {
     deck = new Deck();
-    document.addEventListener('contextmenu', function (event) { return event.preventDefault(); });
+    document.addEventListener('contextmenu', event => event.preventDefault());
     // console.log(deck);
-    var game = document.getElementById('game');
-    var gameDeck = document.createElement('div');
+    let game = document.getElementById('game');
+    let gameDeck = document.createElement('div');
     gameDeck.id = 'container';
     audioPlayer.Play('start');
-    for (var i = 0; i < deck.cards.length; i++) {
-        var cardItem = document.createElement('div');
+    for (let i = 0; i < deck.cards.length; i++) {
+        let cardItem = document.createElement('div');
         cardItem.classList.add('card');
         cardItem.classList.add('back-side');
-        cardItem.id = "card".concat(deck.cards[i].id);
+        cardItem.id = `card${deck.cards[i].id}`;
         cardItem.style.zIndex = (35 - i).toString();
-        var randdelay = Math.random() * 2.2;
+        let randdelay = Math.random() * 2.2;
         cardItem.style.animationName = Math.random() > 0.5 ? 'shuffleleft' : 'shuffleright';
-        cardItem.style.animationDelay = "0.".concat(i * randdelay < 10 ? "0".concat(Math.floor(i * randdelay)) : Math.floor(i * randdelay), "s");
+        cardItem.style.animationDelay = `0.${i * randdelay < 10 ? `0${Math.floor(i * randdelay)}` : Math.floor(i * randdelay)}s`;
         gameDeck === null || gameDeck === void 0 ? void 0 : gameDeck.appendChild(cardItem);
-        cardItem.style.transform = "translateY(".concat(-40 + i / 3.5, "%)");
+        cardItem.style.transform = `translateY(${-40 + i / 3.5}%)`;
     }
-    timeoutShuffle = setTimeout(function () {
+    timeoutShuffle = setTimeout(() => {
         audioPlayer.Play('moving');
-        for (var i = 0; i < deck.cards.length; i++) {
-            var cardItem_1 = document.getElementById("card".concat(i));
-            cardItem_1.style.transform = "translate(-560%,".concat(-40 + ((10 - i / 2) > 0 ? (10 - i / 2) * -1 : 10 - i / 2), "%)");
-            cardItem_1.style.animationDelay = '';
-            cardItem_1.style.animationName = '';
+        for (let i = 0; i < deck.cards.length; i++) {
+            let cardItem = document.getElementById(`card${i}`);
+            cardItem.style.transform = `translate(-560%,${-40 + ((10 - i / 2) > 0 ? (10 - i / 2) * -1 : 10 - i / 2)}%)`;
+            cardItem.style.animationDelay = '';
+            cardItem.style.animationName = '';
             // cardItem.style.transition = '0.4s ease-in-out';
         }
-        var cardItem = document.getElementById("card0");
+        let cardItem = document.getElementById(`card0`);
         cardItem.style.zIndex = '0';
         showCard(deck.cards[0]);
-        timeoutTrumpCard = setTimeout(function () {
+        timeoutTrumpCard = setTimeout(() => {
             audioPlayer.Play('trump');
-            var cardItem = document.getElementById("card0");
+            let cardItem = document.getElementById(`card0`);
             cardItem.style.zIndex = '0';
-            cardItem.style.transform = "translate(-520%, -47%) rotate(".concat(86 + Math.floor(Math.random() * 10), "deg)");
+            cardItem.style.transform = `translate(-520%, -47%) rotate(${86 + Math.floor(Math.random() * 10)}deg)`;
         }, 700);
-        timeoutInitCards = setTimeout(function () {
+        timeoutInitCards = setTimeout(() => {
             deck.InitPlayer();
             audioPlayer.Play('shuffle');
-            for (var _i = 0, _a = deck.player.cards; _i < _a.length; _i++) {
-                var Card = _a[_i];
-                var cardItem_2 = document.getElementById("card".concat(Card.id));
-                cardItem_2.style.transform = 'translate(0%, 120%)';
-                cardItem_2.style.transition = "".concat(0.55 + Card.id / 15, "s");
+            for (const Card of deck.player.cards) {
+                let cardItem = document.getElementById(`card${Card.id}`);
+                cardItem.style.transform = 'translate(0%, 120%)';
+                cardItem.style.transition = `${0.55 + Card.id / 15}s`;
             }
-            for (var _b = 0, _c = deck.bot.cards; _b < _c.length; _b++) {
-                var Card = _c[_b];
-                var cardItem_3 = document.getElementById("card".concat(Card.id));
-                cardItem_3.style.transform = 'translate(0%, -200%)';
-                cardItem_3.style.transition = "".concat(0.55 + Card.id / 15, "s");
+            for (const Card of deck.bot.cards) {
+                let cardItem = document.getElementById(`card${Card.id}`);
+                cardItem.style.transform = 'translate(0%, -200%)';
+                cardItem.style.transition = `${0.55 + Card.id / 15}s`;
             }
             // console.log(deck);
-            timeoutShowCards = setTimeout(function () {
+            timeoutShowCards = setTimeout(() => {
                 audioPlayer.Play('appear');
-                for (var _i = 0, _a = deck.player.cards; _i < _a.length; _i++) {
-                    var Card = _a[_i];
+                for (const Card of deck.player.cards) {
                     showCard(Card);
                 }
                 InitializeCards();
                 ArrangeCards(deck.player.cards, true);
                 ArrangeCards(deck.bot.cards, false);
-                var DisplayingCard = deck.ProcessFirstMove();
+                let DisplayingCard = deck.ProcessFirstMove();
                 if (DisplayingCard !== null && DisplayingCard != undefined) {
                     UpdateInfoBox();
-                    var cardItem_4 = document.getElementById("card".concat(DisplayingCard.id));
-                    if (cardItem_4 === null || cardItem_4 === void 0 ? void 0 : cardItem_4.classList.contains('back-side')) {
+                    let cardItem = document.getElementById(`card${DisplayingCard.id}`);
+                    if (cardItem === null || cardItem === void 0 ? void 0 : cardItem.classList.contains('back-side')) {
                         showCard(DisplayingCard);
                     }
-                    var tempPosition_1 = new Position(DisplayingCard.position.x, DisplayingCard.position.y, DisplayingCard.position.angle);
+                    let tempPosition = new Position(DisplayingCard.position.x, DisplayingCard.position.y, DisplayingCard.position.angle);
                     DisplayingCard.position.x = 0;
                     DisplayingCard.position.y = -37;
                     DisplayingCard.position.angle = 0;
-                    cardItem_4.style.transform = "translate(".concat(DisplayingCard.position.x, "%, ").concat(DisplayingCard.position.y, "%) rotate(").concat(DisplayingCard.position.angle, "deg)");
-                    timeoutHideCard = setTimeout(function () {
-                        DisplayingCard.position = tempPosition_1;
+                    cardItem.style.transform = `translate(${DisplayingCard.position.x}%, ${DisplayingCard.position.y}%) rotate(${DisplayingCard.position.angle}deg)`;
+                    timeoutHideCard = setTimeout(() => {
+                        DisplayingCard.position = tempPosition;
                         audioPlayer.Play('moving');
-                        if (deck.bot.cards.find(function (x) { return x.id === (DisplayingCard === null || DisplayingCard === void 0 ? void 0 : DisplayingCard.id); })) {
+                        if (deck.bot.cards.find(x => x.id === (DisplayingCard === null || DisplayingCard === void 0 ? void 0 : DisplayingCard.id))) {
                             hideCard(DisplayingCard);
                             ArrangeCards(deck.bot.cards, false);
-                            timeoutBotAttack = setTimeout(function () {
+                            timeoutBotAttack = setTimeout(() => {
                                 BotAttack();
                             }, 1000);
                         }
@@ -129,29 +127,27 @@ function start() {
                 }
                 else {
                     AlertInfoBox();
-                    timeoutCenterCards = setTimeout(function () {
-                        for (var _i = 0, _a = deck.bot.cards; _i < _a.length; _i++) {
-                            var Card = _a[_i];
-                            var cardItem_5 = document.getElementById("card".concat(Card.id));
+                    timeoutCenterCards = setTimeout(() => {
+                        for (const Card of deck.bot.cards) {
+                            let cardItem = document.getElementById(`card${Card.id}`);
                             Card.position = new Position(0, -200, 0);
-                            cardItem_5.style.transform = "translate(".concat(Card.position.x, "%, ").concat(Card.position.y, "%) rotate(").concat(-Card.position.angle, "deg)");
-                            cardItem_5.style.transition = "0.35s";
+                            cardItem.style.transform = `translate(${Card.position.x}%, ${Card.position.y}%) rotate(${-Card.position.angle}deg)`;
+                            cardItem.style.transition = `0.35s`;
                         }
-                        for (var _b = 0, _c = deck.player.cards; _b < _c.length; _b++) {
-                            var Card = _c[_b];
-                            var cardItem_6 = document.getElementById("card".concat(Card.id));
+                        for (const Card of deck.player.cards) {
+                            let cardItem = document.getElementById(`card${Card.id}`);
                             Card.position = new Position(0, 120, 0);
-                            cardItem_6.style.transform = "translate(".concat(Card.position.x, "%, ").concat(Card.position.y, "%) rotate(").concat(Card.position.angle, "deg)");
-                            cardItem_6.style.transition = "0.35s";
+                            cardItem.style.transform = `translate(${Card.position.x}%, ${Card.position.y}%) rotate(${Card.position.angle}deg)`;
+                            cardItem.style.transition = `0.35s`;
                             hideCard(Card);
                             // cardItem.removeEventListener('mouseenter', (event) => ScaleCard(Card, cardItem), true);
                             // cardItem.removeEventListener('mouseleave', (event) => NormalizeCard(Card, cardItem), true);
                         }
                         hideCard(deck.cards[0]);
-                        document.getElementById("card".concat(deck.cards[0].id)).style.transition = "0.35s";
-                        document.getElementById("card".concat(deck.cards[0].id)).style.transform = "translate(-560%, -44%) rotate(0deg)";
+                        document.getElementById(`card${deck.cards[0].id}`).style.transition = `0.35s`;
+                        document.getElementById(`card${deck.cards[0].id}`).style.transform = `translate(-560%, -44%) rotate(0deg)`;
                     }, 1200);
-                    timeoutRestart = setTimeout(function () {
+                    timeoutRestart = setTimeout(() => {
                         StrictSmoothRestart();
                     }, 1800);
                 }
@@ -160,22 +156,21 @@ function start() {
     }, 1400);
     game === null || game === void 0 ? void 0 : game.appendChild(gameDeck);
 }
-window.onload = function () {
+window.onload = () => {
     start();
     Resize();
     GuiInit();
 };
 function BotAttack() {
-    var cardAttack = deck.bot.ProcessCardToAttack(deck.trumps);
+    let cardAttack = deck.bot.ProcessCardToAttack(deck.trumps);
     if (cardAttack !== null) {
         if (deck.heap.TryAddAttackingCard(cardAttack)) {
             audioPlayer.Play('placed');
             showCard(cardAttack);
             deck.bot.RemoveCard(cardAttack);
-            for (var _i = 0, _a = deck.heap.activeCards; _i < _a.length; _i++) {
-                var card = _a[_i];
-                var cardItem = document.getElementById("card".concat(card.id));
-                cardItem.style.transform = "translate(".concat(card.position.x, "%, ").concat(card.position.y, "%) rotate(").concat(card.position.angle, "deg)");
+            for (const card of deck.heap.activeCards) {
+                let cardItem = document.getElementById(`card${card.id}`);
+                cardItem.style.transform = `translate(${card.position.x}%, ${card.position.y}%) rotate(${card.position.angle}deg)`;
             }
             ArrangeCards(deck.bot.cards, false);
             toggleActionButtonContext(true, 'Take');
@@ -190,19 +185,13 @@ function BotAttack() {
     }
 }
 function BotAttackNext() {
-    var cardAttack = null;
+    let cardAttack = null;
     if (deck.player.cards.length !== 0) {
-        var _loop_1 = function (card) {
-            if (deck.bot.cards.filter(function (x) { return x.force === card.force; }).length !== 0) {
-                cardAttack = deck.bot.cards.filter(function (x) { return x.force === card.force; })[0];
-                return "break";
-            }
-        };
-        for (var _i = 0, _a = deck.heap.activeCards; _i < _a.length; _i++) {
-            var card = _a[_i];
-            var state_1 = _loop_1(card);
-            if (state_1 === "break")
+        for (const card of deck.heap.activeCards) {
+            if (deck.bot.cards.filter(x => x.force === card.force).length !== 0) {
+                cardAttack = deck.bot.cards.filter(x => x.force === card.force)[0];
                 break;
+            }
         }
         if (cardAttack !== null &&
             ((deck.heap.discardIndex === 0 && deck.heap.attackingCards < 5
@@ -211,21 +200,20 @@ function BotAttackNext() {
                 audioPlayer.Play('placed');
                 showCard(cardAttack);
                 deck.bot.RemoveCard(cardAttack);
-                for (var _b = 0, _c = deck.heap.activeCards; _b < _c.length; _b++) {
-                    var card = _c[_b];
-                    var cardItem = document.getElementById("card".concat(card.id));
-                    cardItem.style.transform = "translate(".concat(card.position.x, "%, ").concat(card.position.y, "%) rotate(").concat(card.position.angle, "deg)");
+                for (const card of deck.heap.activeCards) {
+                    let cardItem = document.getElementById(`card${card.id}`);
+                    cardItem.style.transform = `translate(${card.position.x}%, ${card.position.y}%) rotate(${card.position.angle}deg)`;
                 }
                 ArrangeCards(deck.bot.cards, false);
                 toggleActionButtonContext(true, 'Take');
             }
         }
         else {
-            setTimeout(function () {
+            setTimeout(() => {
                 if (deck.bot.cards.length > 0) {
                     toggleBotsDecision(true, 'Done');
                 }
-                setTimeout(function () {
+                setTimeout(() => {
                     makeAction();
                 }, 1200);
             }, 500);
@@ -238,66 +226,54 @@ function BotAttackNext() {
 }
 function TryPushMoreCards() {
     if (deck.heap.attackingCards !== deck.heap.activeCards.length / 2 && deck.heap.attackingCards < 6 &&
-        deck.player.cards.length > deck.heap.attackingCards - deck.heap.activeCards.filter(function (x) { return x.bundle !== undefined; }).length) {
-        var _loop_2 = function (card) {
-            if (deck.bot.cards.filter(function (x) { return x.suit.type !== deck.trumps.type; })
-                .filter(function (x) { return x.force <= 10; }).filter(function (x) { return x.force == card.force; })
+        deck.player.cards.length > deck.heap.attackingCards - deck.heap.activeCards.filter(x => x.bundle !== undefined).length) {
+        for (const card of deck.heap.activeCards) {
+            if (deck.bot.cards.filter(x => x.suit.type !== deck.trumps.type)
+                .filter(x => x.force <= 10).filter(x => x.force == card.force)
                 .sort(function (a, b) { return a.force - b.force; }).length !== 0) {
-                return { value: deck.bot.cards.filter(function (x) { return x.suit.type !== deck.trumps.type; })
-                        .filter(function (x) { return x.force <= 10; }).filter(function (x) { return x.force == card.force; })
-                        .sort(function (a, b) { return a.force - b.force; })[0] };
+                return deck.bot.cards.filter(x => x.suit.type !== deck.trumps.type)
+                    .filter(x => x.force <= 10).filter(x => x.force == card.force)
+                    .sort(function (a, b) { return a.force - b.force; })[0];
             }
-        };
-        for (var _i = 0, _a = deck.heap.activeCards; _i < _a.length; _i++) {
-            var card = _a[_i];
-            var state_2 = _loop_2(card);
-            if (typeof state_2 === "object")
-                return state_2.value;
         }
     }
     return null;
 }
 function InitializeCards() {
-    var _loop_3 = function (Card) {
-        var cardItem = document.getElementById("card".concat(Card.id));
-        cardItem.addEventListener('mouseenter', function (event) { return ScaleCard(Card, cardItem); }, true);
-        cardItem.addEventListener('mouseleave', function (event) { return NormalizeCard(Card, cardItem); }, true);
-        cardItem.style.transition = "0.55s";
-    };
-    for (var _i = 0, _a = deck.player.cards; _i < _a.length; _i++) {
-        var Card = _a[_i];
-        _loop_3(Card);
+    for (const Card of deck.player.cards) {
+        let cardItem = document.getElementById(`card${Card.id}`);
+        cardItem.addEventListener('mouseenter', (event) => ScaleCard(Card, cardItem), true);
+        cardItem.addEventListener('mouseleave', (event) => NormalizeCard(Card, cardItem), true);
+        cardItem.style.transition = `0.55s`;
     }
-    for (var _b = 0, _c = deck.bot.cards; _b < _c.length; _b++) {
-        var Card = _c[_b];
-        var cardItem = document.getElementById("card".concat(Card.id));
-        cardItem.style.transition = "0.55s";
+    for (const Card of deck.bot.cards) {
+        let cardItem = document.getElementById(`card${Card.id}`);
+        cardItem.style.transition = `0.55s`;
     }
 }
 function ArrangeCards(Cards, isPlayer) {
-    var cardNum = 0;
+    let cardNum = 0;
     if (isPlayer) {
         sortCards();
     }
-    for (var _i = 0, Cards_1 = Cards; _i < Cards_1.length; _i++) {
-        var Card = Cards_1[_i];
-        var cardItem = document.getElementById("card".concat(Card.id));
-        var multiplier = 6 / Cards.length;
+    for (const Card of Cards) {
+        let cardItem = document.getElementById(`card${Card.id}`);
+        let multiplier = 6 / Cards.length;
         Card.position = new Position((-10 * (Cards.length - 1) + (cardNum * 20)) * (multiplier >= 1 ? 1 : multiplier / 0.8), ((isPlayer ? 130 : -210) - (isPlayer ? 1 : -1) * (6 * (cardNum < (Cards.length / 2) ? (Cards.length / 2 - ((Cards.length - cardNum) / 2)) : (((Cards.length - cardNum) - 1) / 2)))), (-5 * (Cards.length - 1) + (cardNum++ * 10)) * (multiplier >= 1 ? 1 : multiplier * 1.5));
-        cardItem.style.transform = "translate(".concat(Card.position.x, "%, ").concat(Card.position.y, "%) rotate(").concat(isPlayer ? Card.position.angle : -Card.position.angle, "deg)");
+        cardItem.style.transform = `translate(${Card.position.x}%, ${Card.position.y}%) rotate(${isPlayer ? Card.position.angle : -Card.position.angle}deg)`;
         cardItem.style.zIndex = isPlayer ? cardNum.toString() : ((cardNum * -1) + 40).toString();
     }
 }
 function NormalizeCard(Card, cardItem) {
-    if (deck.player.cards.find(function (x) { return x.id === Card.id; })) {
-        cardItem.style.transform = "translate(".concat(Card.position.x, "%, ").concat(Card.position.y, "%) rotate(").concat(Card.position.angle, "deg)");
+    if (deck.player.cards.find(x => x.id === Card.id)) {
+        cardItem.style.transform = `translate(${Card.position.x}%, ${Card.position.y}%) rotate(${Card.position.angle}deg)`;
     }
 }
 function ScaleCard(Card, cardItem) {
-    if (!cardItem.classList.contains('dragging') && deck.player.cards.find(function (x) { return x.id === Card.id; })) {
+    if (!cardItem.classList.contains('dragging') && deck.player.cards.find(x => x.id === Card.id)) {
         audioPlayer.Play('hover');
         cardItem.style.cursor = 'grab';
-        cardItem.style.transform = "translate(".concat(Card.position.x - Math.cos((90 + Card.position.angle) * Math.PI / 180) * 70, "%, ").concat(Card.position.y - Math.sin((90 + Card.position.angle) * Math.PI / 180) * 35, "%) rotate(").concat(Card.position.angle, "deg)");
+        cardItem.style.transform = `translate(${Card.position.x - Math.cos((90 + Card.position.angle) * Math.PI / 180) * 70}%, ${Card.position.y - Math.sin((90 + Card.position.angle) * Math.PI / 180) * 35}%) rotate(${Card.position.angle}deg)`;
         // console.log(Card.position, Card.position!.angle! * Math.PI / 180, Card.position?.angle);
     }
     else {

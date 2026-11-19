@@ -1,18 +1,18 @@
-var AudioResource = /** @class */ (function () {
-    function AudioResource(key, volume, path) {
+"use strict";
+class AudioResource {
+    constructor(key, volume, path) {
         this.key = key;
         this.volume = volume;
         this.audio = new Audio(path);
         this.audio.volume = this.volume;
     }
-    AudioResource.prototype.Play = function () {
+    Play() {
         this.audio.currentTime = 0;
         if (this.volume)
             this.audio.play();
-    };
-    return AudioResource;
-}());
-var AudioResources = [
+    }
+}
+const AudioResources = [
     new AudioResource('hover0', 0.65, './resources/sounds/cards-hover0.mp3'),
     new AudioResource('hover1', 0.55, './resources/sounds/cards-hover1.mp3'),
     new AudioResource('shuffle', 1, './resources/sounds/cards-shuffle.mp3'),
@@ -39,41 +39,39 @@ var AudioResources = [
     new AudioResource('lose', 0.35, './resources/sounds/cards-lose.mp3'),
     new AudioResource('alert', 0.06, './resources/sounds/cards-alert.mp3')
 ];
-var AudioManager = /** @class */ (function () {
-    function AudioManager() {
+class AudioManager {
+    constructor() {
         this.Audios = [];
         this.SoundsToggle = false;
-        for (var _i = 0, AudioResources_1 = AudioResources; _i < AudioResources_1.length; _i++) {
-            var Audio_1 = AudioResources_1[_i];
-            this.Audios.push(Audio_1);
+        for (const Audio of AudioResources) {
+            this.Audios.push(Audio);
         }
     }
-    AudioManager.prototype.Play = function (key) {
+    Play(key) {
         var _a, _b, _c, _d, _e;
         if (this.SoundsToggle) {
             if (key === 'hover') {
-                (_a = this.Audios.find(function (x) { return x.key === "hover".concat(Math.floor(Math.random() * 2)); })) === null || _a === void 0 ? void 0 : _a.Play();
+                (_a = this.Audios.find(x => x.key === `hover${Math.floor(Math.random() * 2)}`)) === null || _a === void 0 ? void 0 : _a.Play();
             }
             else if (key === 'sweep') {
-                (_b = this.Audios.find(function (x) { return x.key === "sweep".concat(Math.floor(Math.random() * 2)); })) === null || _b === void 0 ? void 0 : _b.Play();
+                (_b = this.Audios.find(x => x.key === `sweep${Math.floor(Math.random() * 2)}`)) === null || _b === void 0 ? void 0 : _b.Play();
             }
             else if (key === 'placed') {
-                var index_1 = Math.floor(Math.random() * this.Audios.filter(function (x) { return x.key.includes('placed'); }).length);
+                let index = Math.floor(Math.random() * this.Audios.filter(x => x.key.includes('placed')).length);
                 // console.log(index!);
-                (_c = this.Audios.find(function (x) { return x.key === "placed".concat(index_1); })) === null || _c === void 0 ? void 0 : _c.Play();
+                (_c = this.Audios.find(x => x.key === `placed${index}`)) === null || _c === void 0 ? void 0 : _c.Play();
             }
             else if (key === 'shoved') {
-                var index_2 = Math.floor(Math.random() * this.Audios.filter(function (x) { return x.key.includes('shoved'); }).length);
+                let index = Math.floor(Math.random() * this.Audios.filter(x => x.key.includes('shoved')).length);
                 // console.log(index!);
-                (_d = this.Audios.find(function (x) { return x.key === "shoved".concat(index_2); })) === null || _d === void 0 ? void 0 : _d.Play();
+                (_d = this.Audios.find(x => x.key === `shoved${index}`)) === null || _d === void 0 ? void 0 : _d.Play();
             }
             else {
-                (_e = this.Audios.find(function (x) { return x.key === key; })) === null || _e === void 0 ? void 0 : _e.Play();
+                (_e = this.Audios.find(x => x.key === key)) === null || _e === void 0 ? void 0 : _e.Play();
             }
         }
-    };
-    AudioManager.prototype.Toggle = function () {
+    }
+    Toggle() {
         return this.SoundsToggle = !this.SoundsToggle;
-    };
-    return AudioManager;
-}());
+    }
+}

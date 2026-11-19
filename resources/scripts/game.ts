@@ -1,18 +1,18 @@
 let deck = new Deck();
 const audioPlayer = new AudioManager();
 
-let timeoutShuffle: NodeJS.Timeout;
-let timeoutTrumpCard: NodeJS.Timeout;
-let timeoutInitCards: NodeJS.Timeout;
-let timeoutShowCards: NodeJS.Timeout;
-let timeoutHideCard: NodeJS.Timeout;
-let timeoutCenterCards: NodeJS.Timeout;
-let timeoutRestart: NodeJS.Timeout;
-let timeoutSmoothCenter: NodeJS.Timeout;
-let timeoutStrictSmooth: NodeJS.Timeout;
-let timeoutAccurateShuffle: NodeJS.Timeout;
-let timeoutbotbeat: NodeJS.Timeout;
-let timeoutBotAttack: NodeJS.Timeout;
+let timeoutShuffle: number;
+let timeoutTrumpCard: number;
+let timeoutInitCards: number;
+let timeoutShowCards: number;
+let timeoutHideCard: number;
+let timeoutCenterCards: number;
+let timeoutRestart: number;
+let timeoutSmoothCenter: number;
+let timeoutStrictSmooth: number;
+let timeoutAccurateShuffle: number;
+let timeoutbotbeat: number;
+let timeoutBotAttack: number;
 
 function showCard(card: Card): void {
     let cardItem = document.getElementById(`card${card.id}`)!;
