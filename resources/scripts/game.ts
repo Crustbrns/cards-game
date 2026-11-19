@@ -72,7 +72,7 @@ function start() {
         audioPlayer.Play('moving');
         for (let i = 0; i < deck.cards.length; i++) {
             let cardItem = document.getElementById(`card${i}`)!;
-            cardItem.style.transform = `translate(-560%,${-40 + ((10 - i / 2) > 0 ? (10 - i / 2) * -1 : 10 - i / 2)}%)`
+            cardItem.style.transform = GetDeckTransform(i);
             cardItem.style.animationDelay = '';
             cardItem.style.animationName = '';
             // cardItem.style.transition = '0.4s ease-in-out';
@@ -87,7 +87,7 @@ function start() {
             audioPlayer.Play('trump');
             let cardItem = document.getElementById(`card0`)!;
             cardItem.style.zIndex = '0';
-            cardItem.style.transform = `translate(-520%, -47%) rotate(${86 + Math.floor(Math.random() * 10)}deg)`;
+            cardItem.style.transform = GetTrumpTransform();
         }, 700);
 
         timeoutInitCards = setTimeout(() => {
@@ -96,13 +96,13 @@ function start() {
 
             for (const Card of deck.player.cards) {
                 let cardItem = document.getElementById(`card${Card.id}`)!;
-                cardItem.style.transform = 'translate(0%, 120%)';
+                cardItem.style.transform = `translate(0%, ${layout.playerHandY - 10}%)`;
                 cardItem.style.transition = `${0.55 + Card.id / 15}s`;
             }
 
             for (const Card of deck.bot.cards) {
                 let cardItem = document.getElementById(`card${Card.id}`)!;
-                cardItem.style.transform = 'translate(0%, -200%)';
+                cardItem.style.transform = `translate(${layout.botHandX}%, ${layout.botHandY + 10}%)`;
                 cardItem.style.transition = `${0.55 + Card.id / 15}s`;
             }
             // console.log(deck);
@@ -154,13 +154,13 @@ function start() {
                     timeoutCenterCards = setTimeout(() => {
                         for (const Card of deck.bot.cards) {
                             let cardItem = document.getElementById(`card${Card.id}`)!;
-                            Card.position = new Position(0, -200, 0);
+                            Card.position = new Position(layout.botHandX, layout.botHandY + 10, 0);
                             cardItem.style.transform = `translate(${Card.position.x}%, ${Card.position.y}%) rotate(${-Card.position.angle!}deg)`;
                             cardItem.style.transition = `0.35s`;
                         }
                         for (const Card of deck.player.cards) {
                             let cardItem = document.getElementById(`card${Card.id}`)!;
-                            Card.position = new Position(0, 120, 0);
+                            Card.position = new Position(0, layout.playerHandY - 10, 0);
                             cardItem.style.transform = `translate(${Card.position.x}%, ${Card.position.y}%) rotate(${Card.position.angle}deg)`;
                             cardItem.style.transition = `0.35s`;
                             hideCard(Card);
@@ -169,7 +169,7 @@ function start() {
                         }
                         hideCard(deck.cards[0]);
                         document.getElementById(`card${deck.cards[0].id}`)!.style.transition = `0.35s`;
-                        document.getElementById(`card${deck.cards[0].id}`)!.style.transform = `translate(-560%, -44%) rotate(0deg)`;
+                        document.getElementById(`card${deck.cards[0].id}`)!.style.transform = `translate(${layout.deckX}%, ${layout.deckY - 4}%) rotate(0deg)`;
                     }, 1200);
 
                     timeoutRestart = setTimeout(() => {
@@ -181,6 +181,7 @@ function start() {
     }, 1400);
 
     game?.appendChild(gameDeck);
+    Resize();
 }
 
 window.onload = () => {
@@ -307,8 +308,9 @@ function ArrangeCards(Cards: Array<Card>, isPlayer: boolean): void {
         let cardItem = document.getElementById(`card${Card.id}`)!;
 
         let multiplier = 6 / Cards.length;
-        Card.position = new Position((-10 * (Cards.length - 1) + (cardNum * 20)) * (multiplier >= 1 ? 1 : multiplier / 0.8),
-            ((isPlayer ? 130 : -210) - (isPlayer ? 1 : -1) * (6 * (cardNum < (Cards.length / 2) ? (Cards.length / 2 - ((Cards.length - cardNum) / 2)) : (((Cards.length - cardNum) - 1) / 2)))),
+        let spread = isPlayer && isTouch ? GetTouchHandSpread(Cards.length) : (multiplier >= 1 ? 1 : multiplier / 0.8);
+        Card.position = new Position((-10 * (Cards.length - 1) + (cardNum * 20)) * spread + (isPlayer ? 0 : layout.botHandX),
+            ((isPlayer ? layout.playerHandY : layout.botHandY) -(isPlayer ? 1 : -1) * (6 * (cardNum < (Cards.length / 2) ? (Cards.length / 2 - ((Cards.length - cardNum) / 2)) : (((Cards.length - cardNum) - 1) / 2)))),
             (-5 * (Cards.length - 1) + (cardNum++ * 10)) * (multiplier >= 1 ? 1 : multiplier * 1.5));
 
         cardItem.style.transform = `translate(${Card.position.x}%, ${Card.position.y}%) rotate(${isPlayer ? Card.position.angle : -Card.position.angle!}deg)`;

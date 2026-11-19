@@ -4,7 +4,10 @@ body {
     background-image: url('../images/background.png');
     background-repeat: repeat;
     background-size: cover;
-    overflow: hidden; 
+    overflow: hidden;
+    touch-action: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
 }
 
 .card {
@@ -124,20 +127,21 @@ body {
     position: fixed;
     top: calc(52.5%);
     left: 48%;
+    font-size: calc(1rem * var(--ui, 1));
 }
 
 #btn-volume {
     position: absolute;
     top: -30rem;
     left: -55rem;
-    transform: scale(1.5);
+    transform: scale(calc(1.5 * var(--ui, 1)));
     fill: white;
     transition: .2s ease;
 }
 
 #btn-volume:hover {
     cursor: pointer;
-    transform: scale(1);
+    transform: scale(var(--ui, 1));
     transition: .2s ease;
 }
 
@@ -148,6 +152,7 @@ body {
     transform: scale(1);
     color: white;
     width: 6.1rem;
+    white-space: nowrap;
     font-family: 'e-Ukraine-R';
     cursor: pointer;
     transition: .2s ease;
@@ -187,13 +192,13 @@ body {
     position: absolute;
     top: 24.2rem;
     left: 17.5rem;
-    width: 5rem;
+    width: calc(5rem * var(--ui, 1));
     text-align: center;
     font-family: 'e-Ukraine-L';
 }
 
 .button {
-    padding: 8px 15px;
+    padding: 0.5em 0.94em;
     border-radius: 10px;
     background-color: #ea4c89;
     color: white;
@@ -203,8 +208,8 @@ body {
 }
 
 #bot-action {
-    width: 8rem;
-    height: 4rem;
+    width: calc(8rem * var(--ui, 1));
+    height: calc(4rem * var(--ui, 1));
     background-color: white;
     border-radius: 8px 8px 0 8px;
     position: absolute;
@@ -309,4 +314,52 @@ body {
     background-image: url('../images/cardsuit.png');
     background-repeat: no-repeat;
     background-size: cover;
+}
+
+body.portrait #btn-volume {
+    top: -38.2rem;
+    left: -18.9rem;
+}
+
+body.portrait #btn-restart {
+    top: -38.6rem;
+    left: -15.5rem;
+}
+
+body.portrait #bot-action {
+    top: -19.75rem;
+    left: -11.75rem;
+}
+
+body.portrait #btn-info {
+    top: 17.4rem;
+    left: -20.2rem;
+    width: 34rem;
+}
+
+body.portrait #btn-action {
+    top: 17.4rem;
+    left: 14.2rem;
+}
+
+body.touch:not(.portrait) #btn-volume {
+    top: -29rem;
+}
+
+body.touch:not(.portrait) #bot-action {
+    left: -33rem;
+}
+
+body.touch:not(.portrait) #btn-info {
+    top: 18rem;
+    width: 34rem;
+}
+
+body.touch:not(.portrait) #btn-action {
+    top: 21.5rem;
+    left: 30rem;
+}
+
+body.touch:not(.portrait) #btn-restart {
+    left: -49.5rem;
 }

@@ -92,26 +92,22 @@ class Heap {
         return false;
     }
 
-    private CalcPosition(): void {
-        let isEven: boolean = this.attackingCards % 2 === 0;
-        let startPosX: number;
+    CalcPosition(): void {
+        let attackCards = this.activeCards.filter(x => x.bundle === undefined);
 
-        if (isEven) {
-            startPosX = 0 - (Math.floor(this.attackingCards / 2) - 0.5) * 140;
-        }
-        else {
-            startPosX = 0 - Math.floor(this.attackingCards / 2) * 140;
-        }
+        for (let i = 0; i < attackCards.length; i++) {
+            let item = attackCards[i];
+            let row = Math.floor(i / layout.tableColumns);
+            let cardsInRow = Math.min(layout.tableColumns, attackCards.length - row * layout.tableColumns);
+            let column = i % layout.tableColumns;
 
-        for (const item of this.activeCards.filter(x => x.bundle === undefined)) {
-            item.position = new Position(startPosX, -45, item.position?.angle || 0);
+            item.position = new Position((column - (cardsInRow - 1) / 2) * layout.tableStepX,
+                layout.tableY + row * layout.tableStepY, item.position?.angle || 0);
 
             let cardBundle = this.activeCards.find(x => x.bundle === item.id);
             if (cardBundle != null) {
                 cardBundle!.position = new Position(item?.position?.x! + 14, item?.position?.y! + 9, item?.position?.angle! + 5);
             }
-
-            startPosX += 140;
         }
     }
 
@@ -261,11 +257,7 @@ class Deck {
                 while (this.heap.activeCards.length > 0) {
                     let discardedCard = this.heap.activeCards.pop()!;
 
-                    discardedCard.position = new Position(
-                        610 + Math.random() * 100,
-                        -130 + Math.random() * 160,
-                        -25 + Math.random() * 50
-                    );
+                    discardedCard.position = GetDiscardPosition();
 
                     if (Math.random() > 0.5) {
                         discardedCard.hidden = true;
