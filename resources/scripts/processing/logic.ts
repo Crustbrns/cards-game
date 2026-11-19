@@ -94,6 +94,9 @@ class Heap {
 
     CalcPosition(): void {
         let attackCards = this.activeCards.filter(x => x.bundle === undefined);
+        let maxRows = Math.ceil(6 / layout.tableColumns);
+        let rows = Math.ceil(attackCards.length / layout.tableColumns);
+        let tableY = layout.tableY + (maxRows - rows) * layout.tableStepY / 2;
 
         for (let i = 0; i < attackCards.length; i++) {
             let item = attackCards[i];
@@ -102,7 +105,7 @@ class Heap {
             let column = i % layout.tableColumns;
 
             item.position = new Position((column - (cardsInRow - 1) / 2) * layout.tableStepX,
-                layout.tableY + row * layout.tableStepY, item.position?.angle || 0);
+                tableY + row * layout.tableStepY, item.position?.angle || 0);
 
             let cardBundle = this.activeCards.find(x => x.bundle === item.id);
             if (cardBundle != null) {

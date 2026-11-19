@@ -71,12 +71,15 @@ class Heap {
     CalcPosition() {
         var _a, _b, _c, _d;
         let attackCards = this.activeCards.filter(x => x.bundle === undefined);
+        let maxRows = Math.ceil(6 / layout.tableColumns);
+        let rows = Math.ceil(attackCards.length / layout.tableColumns);
+        let tableY = layout.tableY + (maxRows - rows) * layout.tableStepY / 2;
         for (let i = 0; i < attackCards.length; i++) {
             let item = attackCards[i];
             let row = Math.floor(i / layout.tableColumns);
             let cardsInRow = Math.min(layout.tableColumns, attackCards.length - row * layout.tableColumns);
             let column = i % layout.tableColumns;
-            item.position = new Position((column - (cardsInRow - 1) / 2) * layout.tableStepX, layout.tableY + row * layout.tableStepY, ((_a = item.position) === null || _a === void 0 ? void 0 : _a.angle) || 0);
+            item.position = new Position((column - (cardsInRow - 1) / 2) * layout.tableStepX, tableY + row * layout.tableStepY, ((_a = item.position) === null || _a === void 0 ? void 0 : _a.angle) || 0);
             let cardBundle = this.activeCards.find(x => x.bundle === item.id);
             if (cardBundle != null) {
                 cardBundle.position = new Position(((_b = item === null || item === void 0 ? void 0 : item.position) === null || _b === void 0 ? void 0 : _b.x) + 14, ((_c = item === null || item === void 0 ? void 0 : item.position) === null || _c === void 0 ? void 0 : _c.y) + 9, ((_d = item === null || item === void 0 ? void 0 : item.position) === null || _d === void 0 ? void 0 : _d.angle) + 5);
