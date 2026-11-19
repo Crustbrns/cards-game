@@ -24,13 +24,13 @@ const PortraitLayout = {
     sceneHeight: 1400,
     deckX: -199,
     deckY: -245,
-    discardX: 184,
-    discardY: -260,
-    discardWidth: 30,
-    discardHeight: 30,
-    botHandX: 27,
+    discardX: 5,
+    discardY: -25,
+    discardWidth: 20,
+    discardHeight: 20,
+    botHandX: 50,
     botHandY: -245,
-    playerHandY: 240,
+    playerHandY: 285,
     tableY: -77,
     tableStepX: 130,
     tableStepY: 122,
@@ -40,8 +40,8 @@ const PortraitLayout = {
 const CardWidth = 146;
 const CardHeight = 196;
 const TouchHandScale = 1.4;
-const TouchFanRadius = 900;
-const TouchFanAngle = 4;
+const TouchFanRadius = 600;
+const TouchFanAngle = 6;
 const isTouch = window.matchMedia('(pointer: coarse)').matches;
 let layout = window.innerWidth < window.innerHeight ? PortraitLayout : LandscapeLayout;
 let sceneScale = 1;
@@ -52,7 +52,8 @@ function GetTrumpTransform() {
     return `translate(${layout.deckX + 40}%, ${layout.deckY - 7}%) rotate(${86 + Math.floor(Math.random() * 10)}deg)`;
 }
 function GetDiscardPosition() {
-    return new Position(layout.discardX + Math.random() * layout.discardWidth, layout.discardY + Math.random() * layout.discardHeight, -25 + Math.random() * 50);
+    let screenEdgeX = layout.isPortrait ? window.innerWidth / 2 / sceneScale / CardWidth * 100 : 0;
+    return new Position(screenEdgeX + layout.discardX + Math.random() * layout.discardWidth, layout.discardY + Math.random() * layout.discardHeight, -25 + Math.random() * 50);
 }
 function GetHandScale() {
     return isTouch ? ` scale(${TouchHandScale})` : '';
