@@ -310,17 +310,17 @@ function ArrangeCards(Cards: Array<Card>, isPlayer: boolean): void {
         let multiplier = 6 / Cards.length;
         let spread = isPlayer && isTouch ? GetTouchHandSpread(Cards.length) : (multiplier >= 1 ? 1 : multiplier / 0.8);
         Card.position = new Position((-10 * (Cards.length - 1) + (cardNum * 20)) * spread + (isPlayer ? 0 : layout.botHandX),
-            ((isPlayer ? layout.playerHandY : layout.botHandY) -(isPlayer ? 1 : -1) * (6 * (cardNum < (Cards.length / 2) ? (Cards.length / 2 - ((Cards.length - cardNum) / 2)) : (((Cards.length - cardNum) - 1) / 2)))),
+            ((isPlayer ? GetPlayerHandY() : layout.botHandY) -(isPlayer ? 1 : -1) * (6 * (cardNum < (Cards.length / 2) ? (Cards.length / 2 - ((Cards.length - cardNum) / 2)) : (((Cards.length - cardNum) - 1) / 2)))),
             (-5 * (Cards.length - 1) + (cardNum++ * 10)) * (multiplier >= 1 ? 1 : multiplier * 1.5));
 
-        cardItem.style.transform = `translate(${Card.position.x}%, ${Card.position.y}%) rotate(${isPlayer ? Card.position.angle : -Card.position.angle!}deg)`;
+        cardItem.style.transform = `translate(${Card.position.x}%, ${Card.position.y}%) rotate(${isPlayer ? Card.position.angle : -Card.position.angle!}deg)${isPlayer ? GetHandScale() : ''}`;
         cardItem.style.zIndex = isPlayer ? cardNum.toString() : ((cardNum * -1) + 40).toString();
     }
 }
 
 function NormalizeCard(Card: Card, cardItem: HTMLElement): void {
     if (deck.player.cards.find(x => x.id === Card.id)) {
-        cardItem.style.transform = `translate(${Card.position!.x}%, ${Card.position!.y}%) rotate(${Card.position!.angle}deg)`;
+        cardItem.style.transform = `translate(${Card.position!.x}%, ${Card.position!.y}%) rotate(${Card.position!.angle}deg)${GetHandScale()}`;
     }
 }
 
@@ -328,7 +328,7 @@ function ScaleCard(Card: Card, cardItem: HTMLElement): void {
     if (!cardItem.classList.contains('dragging') && deck.player.cards.find(x => x.id === Card.id)) {
         audioPlayer.Play('hover');
         cardItem.style.cursor = 'grab';
-        cardItem.style.transform = `translate(${Card.position!.x! - Math.cos((90 + Card.position!.angle!) * Math.PI / 180) * 70}%, ${Card.position!.y! - Math.sin((90 + Card.position!.angle!) * Math.PI / 180) * 35}%) rotate(${Card.position!.angle}deg)`;
+        cardItem.style.transform = `translate(${Card.position!.x! - Math.cos((90 + Card.position!.angle!) * Math.PI / 180) * 70}%, ${Card.position!.y! - Math.sin((90 + Card.position!.angle!) * Math.PI / 180) * 35}%) rotate(${Card.position!.angle}deg)${GetHandScale()}`;
         // console.log(Card.position, Card.position!.angle! * Math.PI / 180, Card.position?.angle);
     }
     else {

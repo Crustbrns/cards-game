@@ -60,7 +60,8 @@ const PortraitLayout: ILayout = {
 
 const CardWidth = 146;
 const CardHeight = 196;
-const MinTouchTarget = 48;
+const TouchHandStep = 42;
+const TouchHandScale = 1.25;
 
 const isTouch = window.matchMedia('(pointer: coarse)').matches;
 let layout: ILayout = window.innerWidth < window.innerHeight ? PortraitLayout : LandscapeLayout;
@@ -82,10 +83,18 @@ function GetDiscardPosition(): Position {
     );
 }
 
+function GetHandScale(): string {
+    return isTouch ? ` scale(${TouchHandScale})` : '';
+}
+
+function GetPlayerHandY(): number {
+    return layout.playerHandY - (isTouch ? (TouchHandScale - 1) * 50 : 0);
+}
+
 function GetTouchHandSpread(count: number): number {
-    let step = MinTouchTarget / sceneScale;
+    let step = TouchHandStep / sceneScale;
     if (count > 1) {
-        step = Math.min(step, (layout.sceneWidth * 0.95 - CardWidth) / (count - 1));
+        step = Math.min(step, (layout.sceneWidth * 0.95 - CardWidth * TouchHandScale) / (count - 1));
     }
     return step / CardWidth * 100 / 20;
 }

@@ -39,7 +39,8 @@ const PortraitLayout = {
 };
 const CardWidth = 146;
 const CardHeight = 196;
-const MinTouchTarget = 48;
+const TouchHandStep = 42;
+const TouchHandScale = 1.25;
 const isTouch = window.matchMedia('(pointer: coarse)').matches;
 let layout = window.innerWidth < window.innerHeight ? PortraitLayout : LandscapeLayout;
 let sceneScale = 1;
@@ -52,10 +53,16 @@ function GetTrumpTransform() {
 function GetDiscardPosition() {
     return new Position(layout.discardX + Math.random() * layout.discardWidth, layout.discardY + Math.random() * layout.discardHeight, -25 + Math.random() * 50);
 }
+function GetHandScale() {
+    return isTouch ? ` scale(${TouchHandScale})` : '';
+}
+function GetPlayerHandY() {
+    return layout.playerHandY - (isTouch ? (TouchHandScale - 1) * 50 : 0);
+}
 function GetTouchHandSpread(count) {
-    let step = MinTouchTarget / sceneScale;
+    let step = TouchHandStep / sceneScale;
     if (count > 1) {
-        step = Math.min(step, (layout.sceneWidth * 0.95 - CardWidth) / (count - 1));
+        step = Math.min(step, (layout.sceneWidth * 0.95 - CardWidth * TouchHandScale) / (count - 1));
     }
     return step / CardWidth * 100 / 20;
 }

@@ -54,7 +54,7 @@ window.onpointerup = (event) => {
             const elementId = document.getElementsByClassName('dragging')[0].id;
             const card = document.getElementById(elementId)!;
             const cardObject = deck.player.cards.find(x => x.id === parseInt(elementId.slice(4)))
-            card!.style.transform = `translate(${cardObject!.position!.x}%, ${cardObject!.position!.y}%) rotate(${deck.player.cards.find(x => x.id === parseInt(elementId.slice(4)))!.position!.angle}deg)`;
+            card!.style.transform = `translate(${cardObject!.position!.x}%, ${cardObject!.position!.y}%) rotate(${deck.player.cards.find(x => x.id === parseInt(elementId.slice(4)))!.position!.angle}deg)${GetHandScale()}`;
 
             item.classList.remove('dragging');
             document.getElementsByTagName('html')[0].style.cursor = 'default';
@@ -182,7 +182,7 @@ window.onpointermove = (event) => {
         let y = point.y! - dragGrip.y!;
         let angle = Math.atan2(0 - x, 1500 - y);
 
-        card!.style.transform = `translate(${x}px, ${y}px) rotate(${-(angle * 180 / Math.PI) / 2}deg)`;
+        card!.style.transform = `translate(${x}px, ${y}px) rotate(${-(angle * 180 / Math.PI) / 2}deg)${GetHandScale()}`;
         document.getElementsByTagName('html')[0].style.cursor = 'none';
 
         if (!deck.isFirstPlayerMoving) {
